@@ -55,13 +55,11 @@ class SurgePublisher(Publisher):
         else:
             url = target_url.host
 
-        with _temporary_folder(self.env) as path:
-            self.link_artifacts(path)
-            self.write_cname(path, target_url)
-            self.write_auth(path, target_url)
+        self.write_cname(self.output_path, target_url)
+        self.write_auth(self.output_path, target_url)
 
-            for line in Command(['surge', '-p', path, url]):
-                yield line
+        for line in Command(['surge', self.output_path, url]):
+            yield line
 
 
 class SurgePlugin(Plugin):
